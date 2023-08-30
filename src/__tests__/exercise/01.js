@@ -5,7 +5,11 @@ import * as React from 'react';
 import { act } from 'react-dom/test-utils';
 import { createRoot } from 'react-dom/client';
 import Counter from '../../components/counter';
-
+const event = new MouseEvent('click', {
+  bubbles: true,
+  cancelable: true,
+  button: 0,
+});
 // NOTE: this is a new requirement in React 18
 // https://react.dev/blog/2022/03/08/react-18-upgrade-guide#configuring-your-testing-environment
 // Luckily, it's handled for you by React Testing Library :)
@@ -37,10 +41,10 @@ test('counter increments and decrements when the buttons are clicked', () => {
 
   expect(message.textContent).toBe('Current count: 0');
   // 🐨 click the increment button (💰 act(() => increment.click()))
-  act(() => incrementBtn.click());
+  act(() => incrementBtn.dispatchEvent(event));
   // 🐨 assert the message.textContent
   expect(message.textContent).toBe('Current count: 1');
-  act(() => decrementBtn.click());
+  act(() => decrementBtn.dispatchEvent(event));
   expect(message.textContent).toBe('Current count: 0');
 
   // 🐨 click the decrement button (💰 act(() => decrement.click()))
