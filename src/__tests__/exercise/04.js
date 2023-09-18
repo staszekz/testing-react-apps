@@ -10,7 +10,13 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Login from '../../components/login';
-
+import faker from 'faker';
+function buildLoginForm() {
+  return {
+    username: faker.internet.userName(),
+    password: faker.internet.password(),
+  };
+}
 test('submitting the form calls onSubmit with username and password', async () => {
   // 🐨 create a variable called "submittedData" and a handleSubmit function that
   // accepts the data and assigns submittedData to the data that was submitted
@@ -19,27 +25,28 @@ test('submitting the form calls onSubmit with username and password', async () =
   const handleSubmit = jest.fn();
   // const handleSubmit = data => (submittedData = data);
   //
-  const usernameText = 'chacknorris';
-  const passwordText = 'I need no password';
+  const { username, password } = buildLoginForm();
+  // const usernameText = 'chacknorris';
+  // const passwordText = 'I need no password';
   render(<Login onSubmit={handleSubmit} />);
   screen.debug();
   // 🐨 render the login with your handleSubmit function as the onSubmit prop
   //
-  const username = screen.getByLabelText(/username/i);
-  const password = screen.getByLabelText(/password/i);
+  const usernameEl = screen.getByLabelText(/username/i);
+  const passwordEl = screen.getByLabelText(/password/i);
   // 🐨 get the username and password fields via `getByLabelText`
   // 🐨 use `await userEvent.type...` to change the username and password fields to
   //    whatever you want
   //
-  await userEvent.type(username, usernameText);
-  await userEvent.type(password, passwordText);
+  await userEvent.type(usernameEl, username);
+  await userEvent.type(passwordEl, password);
   // 🐨 click on the button with the text "Submit"
   //w
   const button = screen.getByRole('button', { name: /submit/i });
   await userEvent.click(button);
   expect(handleSubmit).toHaveBeenCalledWith({
-    username: usernameText,
-    password: passwordText,
+    username,
+    password,
   });
   expect(handleSubmit).toHaveBeenCalledTimes(1);
   // assert that submittedData is correct
