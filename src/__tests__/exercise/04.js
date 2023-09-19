@@ -11,10 +11,12 @@ import {
 import userEvent from '@testing-library/user-event';
 import Login from '../../components/login';
 import faker from 'faker';
-function buildLoginForm() {
+
+function buildLoginForm({ overrides }) {
   return {
     username: faker.internet.userName(),
     password: faker.internet.password(),
+    ...overrides,
   };
 }
 test('submitting the form calls onSubmit with username and password', async () => {
@@ -25,7 +27,7 @@ test('submitting the form calls onSubmit with username and password', async () =
   const handleSubmit = jest.fn();
   // const handleSubmit = data => (submittedData = data);
   //
-  const { username, password } = buildLoginForm();
+  const { username, password } = buildLoginForm({ password: 'abc' });
   // const usernameText = 'chacknorris';
   // const passwordText = 'I need no password';
   render(<Login onSubmit={handleSubmit} />);
