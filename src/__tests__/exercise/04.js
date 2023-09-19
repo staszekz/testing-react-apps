@@ -12,6 +12,8 @@ import userEvent from '@testing-library/user-event';
 import Login from '../../components/login';
 import faker from 'faker';
 
+import { build, fake } from '@jackfranklin/test-data-bot';
+
 function buildLoginForm({ overrides }) {
   return {
     username: faker.internet.userName(),
@@ -19,6 +21,13 @@ function buildLoginForm({ overrides }) {
     ...overrides,
   };
 }
+// to zamiast tego wyżej, biblioteka która fakuje dane do formularzy
+const buildLogin = build({
+  fields: {
+    username: fake(faker => faker.internet.userName()),
+    password: fake(f => f.internet.password()),
+  },
+});
 test('submitting the form calls onSubmit with username and password', async () => {
   // 🐨 create a variable called "submittedData" and a handleSubmit function that
   // accepts the data and assigns submittedData to the data that was submitted
@@ -27,7 +36,7 @@ test('submitting the form calls onSubmit with username and password', async () =
   const handleSubmit = jest.fn();
   // const handleSubmit = data => (submittedData = data);
   //
-  const { username, password } = buildLoginForm({ password: 'abc' });
+  const { username, password } = buildLogin({ password: 'abc' });
   // const usernameText = 'chacknorris';
   // const passwordText = 'I need no password';
   render(<Login onSubmit={handleSubmit} />);
